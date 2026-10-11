@@ -1,64 +1,39 @@
-# ⚡ Financial Market Terminal
+# Financial Market Terminal v2
 
-A comprehensive, single-page financial dashboard built with Python and Streamlit. This terminal provides institutional-grade analytics, interactive charting, dynamic valuation modeling, and real-time news sentiment for any publicly traded company. 
+A high-performance, single-file financial analytics dashboard built with Streamlit, yfinance, and Plotly. Version 2 introduces professional-grade risk metrics, a fully synchronized valuation engine, advanced technical charting, and massive performance optimizations.
 
-## Key Features
+## 🚀 What's New in v2
 
-* **Advanced Charting & Technicals:** Interactive candlestick charts equipped with Volume overlays, 50/200-Day SMAs, Bollinger Bands, and a 14-period RSI indicator. Supports timeframes from 1-Day (intraday) to Max.
-* **Interactive DCF Valuation:** A live Discounted Cash Flow engine. Adjust WACC, Terminal Growth Rate (g), and Target Operating Margins via sliders to see real-time recalculations of intrinsic value and implied upside/downside.
-* **Monte Carlo & Probabilistic Modeling:** Runs 10,000 simulations on valuation parameters. View the output as a Probability Density Bell Curve, a Sensitivity Tornado Diagram, or a 100-path Geometric Brownian Motion (GBM) Spaghetti Plot.
-* **Dynamic Peer Comparison:** Automatically routes the target ticker to 4 relative industry competitors based on sector metadata. Compare P/E, P/B, Operating Margins, and ROE in an interactive, clickable grid that lets you swap the active dashboard target instantly.
-* **Institutional Excel Export:** Click to download a fully formatted, multi-sheet `.xlsx` file containing the tuned DCF assumptions, a 5-year FCF forecast schedule, terminal value breakdown, and a Bear/Base/Bull scenario analysis matrix.
-* **Live News & Sentiment:** Fetches the latest 6 headlines for the target company using a robust RSS parser, automatically scoring the sentiment (Bullish, Bearish, or Neutral) of each headline using natural language processing.
+### Valuation & Monte Carlo Engines
+* **Synchronized DCF & Monte Carlo:** The 10,000-iteration Monte Carlo simulation is now fully vectorized using `numpy` and directly inherits the DCF slider inputs, ensuring the median simulation perfectly matches the headline intrinsic value[cite: 1].
+* **Scenario Presets:** Quickly apply "Consensus Base," "Recession Shock," or "Tech Boom" scenarios to WACC, growth, and margin assumptions[cite: 1].
+* **Advanced Visualizations:** The Monte Carlo suite now includes a Fan-chart view for better distribution communication and a fixed Tornado diagram for sensitivity analysis[cite: 1].
+* **Live Excel Export:** Generate and download a fully formatted DCF Excel model on the fly[cite: 1].
 
-## Installation & Setup
+### Risk & Quality Panel
+A newly added panel offering institutional-grade screening metrics, safely handling missing data with robust `N/A` fallbacks[cite: 1]:
+* **Cash & Valuation:** FCF yield and EV/FCF[cite: 1].
+* **Profitability:** ROIC and the ROIC minus WACC spread[cite: 1].
+* **Leverage:** Net debt / EBITDA and Interest coverage[cite: 1].
+* **Earnings Quality:** Sloan accrual ratio (screens for earnings not backed by cash)[cite: 1].
+* **Tail Risk:** 3-Year Historical VaR 95%, CVaR, Parametric VaR, and Max Drawdown[cite: 1].
 
-1. **Clone the repository:**
-   ```bash
-   git clone [https://github.com/YOUR_USERNAME/financial-market-terminal.git](https://github.com/YOUR_USERNAME/financial-market-terminal.git)
-   cd financial-market-terminal
+### Technical Charting
+* **Customizable Plotly Charts:** Toggle between Candles/Line and Linear/Log scales[cite: 1]. 
+* **Indicators & Overlays:** Easily apply Bollinger Bands, SMA 50, SMA 200, EMA 20, VWAP, Volume, RSI, MACD, and ATR[cite: 1]. SMA 200 now utilizes warm-up history so it calculates correctly on the first visible bar[cite: 1].
+* **Clean Data:** Removed weekend, holiday, and overnight gaps from the x-axis for contiguous, professional charting[cite: 1].
 
-## Dependencies
+### UI/UX & Performance Optimization
+* **Responsive KPI Cards:** Replaced default Streamlit metrics with custom HTML/CSS cards featuring a subtle gradient and auto-fitting grid layout, preventing text clipping and standardizing heights[cite: 1].
+* **Intelligent Caching:** Peer data and financial metrics are now wrapped in `@st.cache_data(ttl=600)`, drastically reducing UI lag and sequential API calls during interactive widget use[cite: 1].
+* **Custom Peer Analysis:** Users can now input their own comma-separated list of custom peers, which overrides the dynamic sector-based defaults[cite: 1].
+* **Security:** News headlines and URLs are now safely HTML-escaped[cite: 1].
 
-* `streamlit` - Interactive terminal UI and reactive components
-* `yfinance` - Real-time and historical pricing, metadata, and financial statements
-* `pandas` & `numpy` - Vectorized calculations, cash flow scheduling, and Monte Carlo engines
-* `plotly` - Multi-panel interactive charting, subplots, and distribution plots
-* `xlsxwriter` - Automated institutional Excel modeling and dynamic formatting
-* `textblob` - NLP sentiment classification on live financial news
+## 🛠️ Installation & Usage
 
-## Usage
+### Requirements
+The dashboard requires Python 3.8+ and Streamlit 1.40 or newer[cite: 1]. 
 
-1. Launch the app and access `http://localhost:8501` in your browser.
-2. Enter any ticker symbol (e.g., `AAPL`, `NVDA`, `MSFT`) in the search bar.
-3. Use the timeframe pills to review technical indicators across intraday or historical bars.
-4. Expand the **Interactive DCF Valuation Assumptions** panel to adjust discount rates, operating margins, or perpetual growth in real time.
-5. Inspect the Monte Carlo distributions via Bell Curve, Sensitivity Tornado, or Spaghetti GBM paths.
-6. Click any competitor symbol in the **Interactive Peer Comparison** table to instantly pivot the terminal to that firm.
-7. Export your adjusted model directly using **Export Live DCF Model to Excel**.
-
----
-
-## 🗺️ Multi-Asset Expansion Roadmap
-
-The architecture is currently expanding beyond equities into a unified cross-asset terminal:
-
-### Phase 1: Commodities & Energy
-* **Spot & Futures Coverage:** Track major energy (`CL=F`, `NG=F`), precious metals (`GC=F`, `SI=F`), and agricultural commodities.
-* **Term Structure & Curve Analytics:** Futures forward curves, contango vs. backwardation visualization, and roll-yield metrics.
-* **Macro Correlation Matrix:** Real-time correlation tracking between commodities and inflation expectations.
-
-### Phase 2: Foreign Exchange & Global Currencies
-* **G10 & Emerging Market Pairs:** Live FX pricing via `EURUSD=X`, `USDJPY=X`, `GBPUSD=X`, and currency cross matrices.
-* **Macro Drivers:** Central bank policy rate differentials, purchasing power parity (PPP) indicators, and real effective exchange rate (REER) tracking.
-* **FX Volatility Surface:** Implied volatility comparisons and currency risk indices.
-
-### Phase 3: Fixed Income, Rates & Sovereign Debt
-* **Yield Curve Engine:** Full US Treasury term structure (`^IRX`, `^FVX`, `^TNX`, `^TYX`) with 2Y/10Y and 3M/10Y spread monitors.
-* **Curve Inversion Alerts:** Automatic detection and visual signaling for yield curve inversions and recession risk.
-* **Credit & Duration Metrics:** Effective duration, convexity calculators, and corporate credit spread indices (Investment Grade vs. High Yield).
-
-### Phase 4: Digital Assets & Cryptocurrencies
-* **Tier-1 Crypto Coverage:** Real-time metrics for major pairs (`BTC-USD`, `ETH-USD`, `SOL-USD`).
-* **On-Chain & Market Indicators:** Bitcoin dominance ratios, 24-hour volume profiles, and aggregate stablecoin liquidity flow.
-* **Cross-Asset Beta:** Quantitative beta tracking comparing digital asset performance to tech equities and gold.
+Install the required dependencies:
+```bash
+pip install streamlit>=1.40 yfinance plotly pandas numpy xlsxwriter textblob
